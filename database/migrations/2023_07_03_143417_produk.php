@@ -11,20 +11,15 @@ return new class extends Migration
      *
      * @return void
      */
-    
-   
- 
-     public function up()
+    public function up()
     {
-        Schema::create('pembeli', function (Blueprint $table) {
+        Schema::create('produk', function (Blueprint $table) {
             $table->id();
-            $table->string('idpembeli');
-            $table->string('nama');
-            $table->string('harga');
-            $table->foreignId('produk');
-            $table->foreign('produk')->references('id')->on('produk');
+            $table->string('jenisproduk');
             $table->timestamps();
         });
+
+        
     }
 
     /**
@@ -34,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pembeli');
+        Schema::dropIfExists('produk');
     }
 };

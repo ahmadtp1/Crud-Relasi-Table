@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\pembeli;
+use App\Models\produk;
 use Illuminate\Http\Request;
 
 class pembelicontroller extends Controller
@@ -16,6 +17,7 @@ class pembelicontroller extends Controller
     {
         return view('pembeli.index')->with([
             'pembeli'=> pembeli::all(),
+            'produk' => produk::all(),
         ]);
     }
 
@@ -26,7 +28,9 @@ class pembelicontroller extends Controller
      */
     public function create()
     {
-        return view('pembeli.create');
+        return view('pembeli.create', [
+            'produk' => produk::all(),
+        ]);
     }
 
     /**
@@ -38,19 +42,16 @@ class pembelicontroller extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'idpembeli' => 'required|min:3|max:9',
-            'nama' => 'required|min:3',
-            'harga' => 'required|min:3',
-            'produk' => 'required|min:3',
+            'idpembeli' => 'required',
+            'nama' => 'required',
+            'harga' => 'required',
+            'produk' => 'required',
         ]);
 
         $pembeli = new pembeli;
         $pembeli->idpembeli = $request->idpembeli;
-        
         $pembeli->nama = $request->nama;
-        
         $pembeli->harga = $request->harga;
-        
         $pembeli->produk = $request->produk;
         $pembeli->save();
 
@@ -77,8 +78,12 @@ class pembelicontroller extends Controller
     public function edit($id)
     {
        
-        return view('pembeli.edit')->with([
-            'pembeli'=>pembeli::find($id),
+        $pembeli = pembeli::find($id);
+        if (!$pembeli) return redirect()->route('pembeli.index')
+            ->with('error_message', 'pembeli dengan id = ' . $id . ' tidak ditemukan');
+        return view('pembeli.edit', [
+            'pembeli' => $pembeli,
+            'produk' => produk::all()
         ]);
     }
 
@@ -92,19 +97,16 @@ class pembelicontroller extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'idpembeli' => 'required|min:3|max:9',
-            'nama' => 'required|min:3',
-            'harga' => 'required|min:3',
-            'produk' => 'required|min:3',
+            'idpembeli' => 'required',
+            'nama' => 'required',
+            'harga' => 'required',
+            'produk' => 'required',
         ]);
 
         $pembeli = pembeli::find($id);
         $pembeli->idpembeli = $request->idpembeli;
-        
         $pembeli->nama = $request->nama;
-        
         $pembeli->harga = $request->harga;
-        
         $pembeli->produk = $request->produk;
         $pembeli->save();
 
